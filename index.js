@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const authRoutes = require('./routes/authRoutes')
+const tournamentRouts = require('./routes/tournamentRoutes')
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -13,6 +14,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/auth', authRoutes)
+app.use('/tournaments', tournamentRouts)
 
 mongoose.connect(process.env.MONGO_URI).then(() => console.log('Conectado ao mongoDb')).catch((error) =>console.error('Erro ao conectar ao MOngoDB', error))
 
