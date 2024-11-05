@@ -22,3 +22,26 @@ exports.registrer = async (req, res) => {
         res.status(500).json({ message: 'erro ao registrar o usuario', error})
     }
 }
+
+exports.login = async (req, res) => {
+    try{
+        const { email, password } = req.body
+
+        const user = await User.findOne({ email })
+        if(!user){
+            return res.status(400).json({ message: 'E-mail ou senha invalidos'})
+        }
+        const isPassword = await User.findOne({ password })
+        if(!isPassword){
+            return res.status(400).json({ message: 'E-mail ou senha invalidos'})
+        }
+
+        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, {
+            expiresIn: '1h'
+        })
+
+        res.json({ message: 'Login realizado com sucesso' }, token)
+    } catch(error) {
+        res.status(500).json({ message: 'Erro ao realizar o login', error})
+    }
+}
