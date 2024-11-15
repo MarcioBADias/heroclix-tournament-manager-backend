@@ -31,7 +31,7 @@ exports.login = async (req, res) => {
         if(!user){
             return res.status(400).json({ message: 'E-mail ou senha invalidos'})
         }
-        const isPassword = await User.findOne({ password })
+        const isPassword = await bcrypt.compare(password, user.password)
         if(!isPassword){
             return res.status(400).json({ message: 'E-mail ou senha invalidos'})
         }
@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
             expiresIn: '1h'
         })
 
-        res.json({ message: 'Login realizado com sucesso' }, token)
+        res.json({ message: 'Login realizado com sucesso', token })
     } catch(error) {
         res.status(500).json({ message: 'Erro ao realizar o login', error})
     }
